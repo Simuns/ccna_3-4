@@ -1,0 +1,56 @@
+# /bin/bash
+# Dette er en fil til at opsatte firewall midlertidigt
+# Vis kommandoer efterhanden som de kores
+set -x
+# reload til permanent opsetning:
+systemctl restart firewalld
+#-------------------------------------------------------
+#Setup of external zone at wan interface
+firewall-cmd --zone=external --change-interface=ens33
+#Setup of Internal zone at intranet interface
+firewall-cmd --zone=internal --change-interface=ens38
+#setup of dmz zone at dmz interface
+firewall-cmd --zone=dmz --change-interface=ens37
+#Setup of direct firewall rule allowing incomming requests from intranet to dmz
+firewall-cmd --direct --add-rule ipv4 filter FORWARD 0 -i ens38 -o ens37 -j ACCEPT
+#Setup if direct firewall rule allowing return requests from dmz to intranet
+firewall-cmd --direct --add-rule ipv4 filter FORWARD 0 -i ens37 -o ens38 -m state --state RELATED,ESTABLISHED -j ACCEPT
+# allow dns requests into dmz zone
+firewall-cmd --zone=dmz --add-service=mdns
+#Nat + port forward rule for webserver (HTTP) from wan interface
+firewall-cmd --zone=external --add-forward-port=port=80:proto=tcp:toaddr=192.168.10.3
+#Nat + port forward rule for webserver (HTTPS) from wan interface
+firewall-cmd --zone=external --add-forward-port=port=443:proto=tcp:toaddr=192.168.10.3
+#Opens access to webserver with the specific (HTTP) protocol
+firewall-cmd --zone=dmz --add-service=http
+#Opens access to webserver with the specific (HTTPS) protocol
+firewall-cmd --zone=dmz --add-service=https
+#Nat + port forward rule for smb from wan interface tcp
+firewall-cmd --zone=external --add-forward-port=port=445:proto=tcp:toaddr=192.168.10.4
+#Nat + port forward rule for smb from wan interface udp
+firewall-cmd --zone=external --add-forward-port=port=445:proto=udp:toaddr=192.168.10.4
+#Nat + port forward rule for FTP data transfer from wan interface tcp
+firewall-cmd --zone=external --add-forward-port=port=20:proto=tcp:toaddr=192.168.10.3
+#Nat + port forward rule for FTP Command control from wan interface tcp
+firewall-cmd --zone=external --add-forward-port=port=21:proto=tcp:toaddr=192.168.10.3
+# Opens access to ftp server with specific ftp protocol
+firewall-cmd --zone=dmz --add-service=ftp
+#
+# Opens access to print server with (Cups) protocol
+##firewall-cmd --zone=dmz --add-service=ipp
+#Opens acces to print server (Cups) protocol
+##firewall-cmd --zone=dmz --add-service=radius
+#Opens access to print server (Cups) Protocol
+#
+##All nat rules for print server are ignored.
+#
+#All services are opened for mail server to function
+firewall-cmd --zone=dmz --add-service=smtp
+firewall-cmd --zone=dmz --add-service=imap
+firewall-cmd --zone=dmz --add-service=pop3
+#
+#following commands will limit the number of ssh attpents to 4 tries, before firewall rule rejects port 22(ssh) This is for security purposes.
+firewall-cmd --direct --add-rule ipv4 filter INPUT_direct 0 -p tcp --dport 22 -m state --state NEW -m recent --set
+firewall-cmd --direct --add-rule ipv4 filter INPUT_direct 1 -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 30 --hitcount 4 -j REJECT --reject-with tcp-reset
+#Run next command when im sure everything is correctly configured. this will save all changes done.
+firewall-cmd --runtime-to-permanent

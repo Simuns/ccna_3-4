@@ -1,0 +1,9 @@
+service timestamps log database msec	
+logging trap <value><nr>
+clock set
+ntp server <ip>
+ntp update calendar
+
+
+Setup server:
+ntp-master <stratum number>
