@@ -1,0 +1,60 @@
+#DONE ON sitv_router-A
+ip routing
+hostname sitv_router-a ella b
+vlans eru sett upp (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
+Interface vlan (100 og 200) við ip 10.10.10.x1 og x2
+interface gig 0/1 swichport acces vlan (100 200)
+sett øll inneffektiv ports til access vlan 999 (blackhole)
+sett øll vlans frá gig 1/0 - 3 til trunk
+channel-group 1 mode active
+no ip domain lookup
+vty line 0 15
+password cisco
+logging syncronius
+enable secret class
+service password encrypt
+line console 0 (Logging synchronious)
+Setup vlan interfaces with relevant ip addresses for vlans (10)(20)(30)(99)
+---------------------------
+#DONE ON sitv-switch-a og b
+hostname set
+added vlans (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
+Added all Unused vlans to (vlan 999 Blackhole)
+TRUNKING ON LACP link
+Setup channel-group mode active
+opened vlan access on workstations salg-a salg-b
+--------------------------
+#DONE ON sih_gw
+interface g0/1 g0/2
+ip address 10.10.10.x 255.255.255.252
+ip address 10.10.10.x 255.255.255.252
+no shutdown on both
+--------------------------
+VLANS
+10 SALG
+20 CHEF
+30 TEKNIK
+99 MANAGEMENT
+999 Blackhole
+-----------------------------
+VLSM
+30 Salg 
+30 Teknik
+14 Chef
+14 Mangaement
+2 backbone a
+2 backbone b
+2 router a
+2 router b
+
+10.10.10.0/25
+Subnet Name	Needed Size	Allocated Size	Address	Mask	Dec Mask	Assignable Range	Broadcast
+A	30	30	10.10.10.0	/27	255.255.255.224	10.10.10.1 - 10.10.10.30	10.10.10.31         Salg
+B	30	30	10.10.10.32	/27	255.255.255.224	10.10.10.33 - 10.10.10.62	10.10.10.63         Teknik
+C	14	14	10.10.10.64	/28	255.255.255.240	10.10.10.65 - 10.10.10.78	10.10.10.79         Chef
+D	14	14	10.10.10.80	/28	255.255.255.240	10.10.10.81 - 10.10.10.94	10.10.10.95         Management
+E	2	2	10.10.10.96	/30	255.255.255.252	10.10.10.97 - 10.10.10.98	10.10.10.99         Backbone A
+F	2	2	10.10.10.100	/30	255.255.255.252	10.10.10.101 - 10.10.10.102	10.10.10.103    Backbone B
+G	2	2	10.10.10.104	/30	255.255.255.252	10.10.10.105 - 10.10.10.106	10.10.10.107    GW->Router A
+H	2	2	10.10.10.108	/30	255.255.255.252	10.10.10.109 - 10.10.10.110	10.10.10.111    GW->Router B
+
