@@ -34,12 +34,13 @@ trunk between switches (a<->c<->b)
     encapsulation
     lacp group 2
     both channel-groups on active
+TODO DHCP Helper
 --------------------------------
 sitv_switch-c
 added vlans (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
 lacp configured trunk standard port 9999
 Hostname 
-
+TODO DHCP helper
 --------------------------
 #DONE ON sih_gw
 interface g0/1 g0/2
@@ -48,6 +49,7 @@ ip address 10.10.10.x 255.255.255.252
 no shutdown on both
 ROUTER eigrp 10
     add relevant networks. (100 200)
+TODO DHCP SERVER
 --------------------------
 VLANS
 10 SALG
