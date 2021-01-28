@@ -1,0 +1,54 @@
+To do liste for SW2
+
+Basic
+  hostname SW2 #
+  banner Skrid! Lukket fest! #
+  no domain lookup #
+  sikkerhed
+    enable kode #
+    sluk telnet
+    ssh
+      domain sutsko.dk
+      crypto key 1024
+      user karl/kaffe
+      antal forsøg ? timeout ?
+    password-encrypt
+  logg synch
+  SVI
+    int vlan 99
+    ip: se ip plan / se tegning
+    def gateway = hsrp (se ip plan)
+  no ip routing
+
+Vlans
+  10 chef : f0/7-10
+  20 salg
+  30 teknik
+  99 management
+ 666 blackhole
+
+Etherchannels
+  Po2 : g0/1-2
+    LACP : passive
+  Po3 : g0/3-4
+    LACP : active
+  Po5 : g0/5-6
+    PAgP : desirable
+
+Trunks
+  Po2
+    encap dot1q
+    allow 10,20,30,99
+    native ?
+  Po3
+    encap dot1q
+    allow 10,20,30,99
+    native ?
+  Po5
+    encap dot1q
+    allow 10,20,30,99
+    native ?
+
+Unused ports
+  blackhole
+  bpduguard + portfast
