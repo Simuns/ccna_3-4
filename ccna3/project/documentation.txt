@@ -6,7 +6,7 @@ Interface vlan (100 og 200) við ip 10.10.10.x1 og x2
 interface gig 0/1 swichport acces vlan (100 200)
 sett øll inneffektiv ports til access vlan 999 (blackhole)
 sett øll vlans frá gig 1/0 - 3 til trunk
-channel-group 1 mode active
+channel-group 1 mode active with default port on 999
 no ip domain lookup
 vty line 0 15
 password cisco
@@ -14,27 +14,48 @@ logging syncronius
 enable secret class
 service password encrypt
 line console 0 (Logging synchronious)
-Setup vlan interfaces with relevant ip addresses for vlans (10)(20)(30)(99)
+Setup vlan interfaces with relevant ip addresses for vlans (10)(20)(30)(99) (100 gateway-a) (200 gateway-b)
+ROUTER eigrp 10
+    add relevant networks. (10,20,30,99,100 200)
 ---------------------------
 #DONE ON sitv-switch-a og b
 hostname set
 added vlans (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
 Added all Unused vlans to (vlan 999 Blackhole)
-TRUNKING ON LACP link
+TRUNKING ON LACP link to router
+with default port on 999
 Setup channel-group mode active
 opened vlan access on workstations salg-a salg-b
+trunk between switches (ab) 
+    encapsulation
+    lacp group 2
+    both channel-groups on active
+trunk between switches (a<->c<->b) 
+    encapsulation
+    lacp group 2
+    both channel-groups on active
+--------------------------------
+sitv_switch-c
+added vlans (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
+lacp configured trunk standard port 9999
+Hostname 
+
 --------------------------
 #DONE ON sih_gw
 interface g0/1 g0/2
 ip address 10.10.10.x 255.255.255.252
 ip address 10.10.10.x 255.255.255.252
 no shutdown on both
+ROUTER eigrp 10
+    add relevant networks. (100 200)
 --------------------------
 VLANS
 10 SALG
 20 CHEF
 30 TEKNIK
 99 MANAGEMENT
+100 Gateway-A
+200 Gateway-B
 999 Blackhole
 -----------------------------
 VLSM
@@ -42,8 +63,6 @@ VLSM
 30 Teknik
 14 Chef
 14 Mangaement
-2 backbone a
-2 backbone b
 2 router a
 2 router b
 
