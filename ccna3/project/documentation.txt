@@ -17,6 +17,11 @@ line console 0 (Logging synchronious)
 Setup vlan interfaces with relevant ip addresses for vlans (10)(20)(30)(99) (100 gateway-a) (200 gateway-b)
 ROUTER eigrp 10
     add relevant networks. (10,20,30,99,100 200)
+Dhcp helper for networks (10, 20, 30)
+HSRP for networks (10, 20, 30)
+	configure standby
+	configure priority A<-B
+	configure preempt
 ---------------------------
 #DONE ON sitv-switch-a og b
 hostname set
@@ -34,13 +39,17 @@ trunk between switches (a<->c<->b)
     encapsulation
     lacp group 2
     both channel-groups on active
-TODO DHCP Helper
+PVST vlan (1, 10, 20, 30, 99, 999)
+	primary root for switch-a
+	secondary root for switch-b
+	configure rapid-pvst (a b c)
+	configure portguard default
+	configure bpduguard default
 --------------------------------
 sitv_switch-c
 added vlans (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
 lacp configured trunk standard port 9999
 Hostname 
-TODO DHCP helper
 --------------------------
 #DONE ON sih_gw
 interface g0/1 g0/2
@@ -49,7 +58,14 @@ ip address 10.10.10.x 255.255.255.252
 no shutdown on both
 ROUTER eigrp 10
     add relevant networks. (100 200)
-TODO DHCP SERVER
+DHCP SERVER
+conf default route
+PAT
+    ip nat inside
+    ip nat outside
+    access-list 10.10.10.0 /25
+    nat inside list gig 0/1 - 2 overload
+    
 --------------------------
 VLANS
 10 SALG
@@ -78,4 +94,3 @@ E	2	2	10.10.10.96	/30	255.255.255.252	10.10.10.97 - 10.10.10.98	10.10.10.99     
 F	2	2	10.10.10.100	/30	255.255.255.252	10.10.10.101 - 10.10.10.102	10.10.10.103    Backbone B
 G	2	2	10.10.10.104	/30	255.255.255.252	10.10.10.105 - 10.10.10.106	10.10.10.107    GW->Router A
 H	2	2	10.10.10.108	/30	255.255.255.252	10.10.10.109 - 10.10.10.110	10.10.10.111    GW->Router B
-
