@@ -1,9 +1,9 @@
 sitv_router-b#show running-config 
 Building configuration...
 
-Current configuration : 5637 bytes
+Current configuration : 6052 bytes
 !
-! Last configuration change at 09:21:53 UTC Fri Jan 29 2021
+! Last configuration change at 17:04:14 UTC Sat Jan 30 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -17,10 +17,10 @@ boot-start-marker
 boot-end-marker
 !
 !
-enable secret 5 $1$DuqH$6v1MW6I3JsfzwP0Ijk4MX0
+enable secret 5 $1$auf9$Vju2C0YTFZQ1AGnMsL0i40
 !
+username karl privilege 15 password 7 09474F0F1F00
 no aaa new-model
-!
 !
 !
 !         
@@ -28,7 +28,9 @@ no aaa new-model
 !
 !
 !
+!
 no ip domain-lookup
+ip domain-name sitv-router-b.project
 ip cef
 no ipv6 cef
 !
@@ -44,9 +46,9 @@ vlan internal allocation policy ascending
 !
 !
 !
-!
-!
 !         
+!
+!
 !
 !
 !
@@ -136,7 +138,7 @@ interface GigabitEthernet2/3
  switchport mode access
  media-type rj45
  negotiation auto
-!
+!         
 interface GigabitEthernet3/0
  switchport access vlan 999
  switchport mode access
@@ -164,35 +166,47 @@ interface GigabitEthernet3/3
 interface Vlan10
  ip address 10.10.10.2 255.255.255.224
  ip helper-address 10.10.10.101 
+ standby 10 ip 10.10.10.3
+ standby 10 priority 120
+ standby 10 preempt delay minimum 10
 !
 interface Vlan12
  no ip address
- ip helper-address 10.10.10.101 
  shutdown
 !
 interface Vlan20
  ip address 10.10.10.34 255.255.255.224
  ip helper-address 10.10.10.101 
+ standby 20 ip 10.10.10.35
+ standby 20 priority 120
+ standby 20 preempt delay minimum 10
 !
 interface Vlan30
  ip address 10.10.10.66 255.255.255.240
  ip helper-address 10.10.10.101 
+ standby 30 ip 10.10.10.67
+ standby 30 priority 120
+ standby 30 preempt delay minimum 10
 !
 interface Vlan99
  ip address 10.10.10.82 255.255.255.240
 !
+interface Vlan112
+ no ip address
+ shutdown
+!
 interface Vlan200
  ip address 10.10.10.102 255.255.255.252
 !
-!         
+!
 router eigrp 10
  network 10.10.10.0 0.0.0.31
  network 10.10.10.32 0.0.0.31
  network 10.10.10.64 0.0.0.15
  network 10.10.10.80 0.0.0.15
- network 10.10.10.96 0.0.0.3
  network 10.10.10.100 0.0.0.3
 !
+ip default-gateway 10.10.10.101
 ip forward-protocol nd
 !
 no ip http server
@@ -232,18 +246,18 @@ banner login ^C
 * purposes is expressly prohibited except as otherwise authorized by     *
 * Cisco in writing.                                                      *
 **************************************************************************^C
+banner motd ^CUnauthorized access is strictly prohibited!!!^C
 !
 line con 0
+ password 7 121A0C041104
  logging synchronous
+ login local
 line aux 0
 line vty 0 4
- password 7 070C285F4D06
+ password 7 104D000A0618
  logging synchronous
  login local
-line vty 5 15
- password 7 070C285F4D06
- logging synchronous
- login local
+ transport input ssh
 !
 !
 end

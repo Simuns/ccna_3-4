@@ -1,9 +1,9 @@
 sitv_router-a#show running-config 
 Building configuration...
 
-Current configuration : 5556 bytes
+Current configuration : 5957 bytes
 !
-! Last configuration change at 09:21:53 UTC Fri Jan 29 2021
+! Last configuration change at 17:04:19 UTC Sat Jan 30 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -17,10 +17,10 @@ boot-start-marker
 boot-end-marker
 !
 !
-enable secret 5 $1$Ud0o$yXV8VDjoF83EdnbqSBQAE1
+enable secret 5 $1$9qpp$PBXfN1DpXOkeBIaoZNE2g0
 !
+username karl privilege 15 password 7 04500A000924
 no aaa new-model
-!
 !
 !
 !         
@@ -28,7 +28,9 @@ no aaa new-model
 !
 !
 !
+!
 no ip domain-lookup
+ip domain-name sitv-router-a.project
 ip cef
 no ipv6 cef
 !
@@ -44,9 +46,9 @@ vlan internal allocation policy ascending
 !
 !
 !
-!
-!
 !         
+!
+!
 !
 !
 !
@@ -136,7 +138,7 @@ interface GigabitEthernet2/3
  switchport mode access
  media-type rj45
  negotiation auto
-!
+!         
 interface GigabitEthernet3/0
  switchport access vlan 999
  switchport mode access
@@ -164,14 +166,23 @@ interface GigabitEthernet3/3
 interface Vlan10
  ip address 10.10.10.1 255.255.255.224
  ip helper-address 10.10.10.97 
+ standby 10 ip 10.10.10.3
+ standby 10 priority 105
+ standby 10 preempt delay minimum 10
 !
 interface Vlan20
  ip address 10.10.10.33 255.255.255.224
  ip helper-address 10.10.10.97 
+ standby 20 ip 10.10.10.35
+ standby 20 priority 105
+ standby 20 preempt delay minimum 10
 !
 interface Vlan30
  ip address 10.10.10.65 255.255.255.240
  ip helper-address 10.10.10.97 
+ standby 30 ip 10.10.10.67
+ standby 30 priority 105
+ standby 30 preempt delay minimum 10
 !
 interface Vlan99
  ip address 10.10.10.81 255.255.255.240
@@ -186,8 +197,8 @@ router eigrp 10
  network 10.10.10.64 0.0.0.15
  network 10.10.10.80 0.0.0.15
  network 10.10.10.96 0.0.0.3
- network 10.10.10.100 0.0.0.3
 !
+ip default-gateway 10.10.10.97
 ip forward-protocol nd
 !
 no ip http server
@@ -196,7 +207,7 @@ no ip http secure-server
 !
 !
 !
-!
+!         
 !
 control-plane
 !
@@ -227,18 +238,18 @@ banner login ^C
 * purposes is expressly prohibited except as otherwise authorized by     *
 * Cisco in writing.                                                      *
 **************************************************************************^C
+banner motd ^CUnauthorized access is strictly prohibited!!!^C
 !
 line con 0
+ password 7 1511021F0725
  logging synchronous
+ login local
 line aux 0
 line vty 0 4
- password 7 01100F175804
+ password 7 05080F1C2243
  logging synchronous
  login local
-line vty 5 15
- password 7 01100F175804
- logging synchronous
- login local
+ transport input ssh
 !
 !
 end

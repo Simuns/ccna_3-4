@@ -22,13 +22,36 @@ HSRP for networks (10, 20, 30)
 	configure standby
 	configure priority A<-B
 	configure preempt
+
+setup default port on 999 all trunks
+setup vlan 99 ip
+no ip domain lookup
+ssh key generated
+domain-name (sitv.router-a.project)
+Banner Motd
+access vlan 999 unused ports
+SECURITY
+    user
+        name karl
+        privelege 15
+        password kaffe
+    enable secret class
+        password encryption
+    line vty 0 4
+        password
+        login local
+        logging synchronious
+        transport input ssh
+    line console 0
+        password
+        login local
+        logging synchronious
+
+
 ---------------------------
-#DONE ON sitv-switch-a og b
-hostname set
+#DONE ON sitv-switch-a og b og c
 added vlans (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
-Added all Unused vlans to (vlan 999 Blackhole)
 TRUNKING ON LACP link to router
-with default port on 999
 Setup channel-group mode active
 opened vlan access on workstations salg-a salg-b
 trunk between switches (ab) 
@@ -45,17 +68,62 @@ PVST vlan (1, 10, 20, 30, 99, 999)
 	configure rapid-pvst (a b c)
 	configure portguard default
 	configure bpduguard default
---------------------------------
-sitv_switch-c
-added vlans (10 Salg) (20 Chef) (30 Teknik) (99 Management) (999 blackhole)
-lacp configured trunk standard port 9999
-Hostname 
+
+Added all Unused vlans to (vlan 999 Blackhole)
+setup default port on 999 all trunks
+setup vlan 99 ip
+Default-gateway
+no ip domain lookup
+domain-name (sitv.switch-a.project)
+ssh key generated
+Banner Motd
+SECURITY
+    user
+        name karl
+        privelege 15
+        password kaffe
+    enable secret class
+        password encryption
+    line vty 0 4
+        password
+        login local
+        logging synchronious
+        transport input ssh
+    line console 0
+        password
+        login local
+        logging synchronious
+
+
+
 --------------------------
 #DONE ON sih_gw
 interface g0/1 g0/2
 ip address 10.10.10.x 255.255.255.252
 ip address 10.10.10.x 255.255.255.252
 no shutdown on both
+no ip domain lookup
+ssh key generated
+domain-name (sitv.gw.project)
+Banner Motd
+SECURITY
+    user
+        name karl
+        privelege 15
+        password kaffe
+    enable secret class
+        password encryption
+    line vty 0 4
+        password
+        login local
+        logging synchronious
+        transport input ssh
+    line console 0
+        password
+        login
+        logging synchronious
+
+
 ROUTER eigrp 10
     add relevant networks. (100 200)
 DHCP SERVER

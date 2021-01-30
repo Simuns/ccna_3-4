@@ -1,14 +1,14 @@
 sitv_switch-b#show running-config 
 Building configuration...
 
-Current configuration : 5454 bytes
+Current configuration : 6129 bytes
 !
-! Last configuration change at 09:26:23 UTC Fri Jan 29 2021
+! Last configuration change at 18:12:08 UTC Sat Jan 30 2021
 !
 version 15.2
 service timestamps debug datetime msec
 service timestamps log datetime msec
-no service password-encryption
+service password-encryption
 service compress-config
 !
 hostname sitv_switch-b
@@ -17,36 +17,42 @@ boot-start-marker
 boot-end-marker
 !
 !
+enable secret 5 $1$nwo1$C4V/TZfh9BGEunyJKrono/
 !
+username karl privilege 15 password 7 11021803111B
 no aaa new-model
-!
-!
 !
 !
 !         
 !
 !
 !
+!
+!
+no ip domain-lookup
+ip domain-name sitv.switch-b.project
 ip cef
 no ipv6 cef
 !
 !
 !
-spanning-tree mode pvst
+spanning-tree mode rapid-pvst
+spanning-tree portfast edge bpduguard default
 spanning-tree extend system-id
+spanning-tree vlan 1,10,20,30,99,999 priority 28672
 !
 vlan internal allocation policy ascending
 !
 ! 
 !
 !
-!
-!
-!
-!
-!
-!
 !         
+!
+!
+!
+!
+!
+!
 !
 !
 !
@@ -183,8 +189,16 @@ interface GigabitEthernet3/3
  media-type rj45
  negotiation auto
 !
+interface Vlan10
+ no ip address
+ shutdown
+!
+interface Vlan99
+ ip address 10.10.10.84 255.255.255.240
+!
+ip default-gateway 10.10.10.82
 ip forward-protocol nd
-!         
+!
 no ip http server
 no ip http secure-server
 !
@@ -222,11 +236,23 @@ banner login ^C
 * purposes is expressly prohibited except as otherwise authorized by     *
 * Cisco in writing.                                                      *
 **************************************************************************^C
+banner motd ^CUnauthorized access is strictly forbidden!!!^C
 !
 line con 0
+ password 7 0822455D0A16
+ logging synchronous
+ login local
 line aux 0
 line vty 0 4
- login
-!
+ password 7 01100A054818
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ password 7 01100A054818
+ logging synchronous
+ login local
+ transport input ssh
+!         
 !
 end

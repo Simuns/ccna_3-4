@@ -1,14 +1,14 @@
 sitv_switch-c#show running-config 
 Building configuration...
 
-Current configuration : 4407 bytes
+Current configuration : 5454 bytes
 !
-! Last configuration change at 09:14:06 UTC Fri Jan 29 2021
+! Last configuration change at 18:12:30 UTC Sat Jan 30 2021
 !
 version 15.2
 service timestamps debug datetime msec
 service timestamps log datetime msec
-no service password-encryption
+service password-encryption
 service compress-config
 !
 hostname sitv_switch-c
@@ -17,22 +17,27 @@ boot-start-marker
 boot-end-marker
 !
 !
+enable secret 5 $1$vV/i$mWfAYFsX.MUsQVlvFI4Id.
 !
+username karl privilege 15 password 7 130E16140D05
 no aaa new-model
-!
-!
 !
 !
 !         
 !
 !
 !
+!
+!
+no ip domain-lookup
+ip domain-name sitv.switch-c.project
 ip cef
 no ipv6 cef
 !
 !
 !
-spanning-tree mode pvst
+spanning-tree mode rapid-pvst
+spanning-tree portfast edge bpduguard default
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
@@ -41,12 +46,12 @@ vlan internal allocation policy ascending
 !
 !
 !
-!
-!
-!
-!
-!
 !         
+!
+!
+!
+!
+!
 !
 !
 !
@@ -93,22 +98,32 @@ interface GigabitEthernet0/3
  channel-group 4 mode active
 !
 interface GigabitEthernet1/0
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
 interface GigabitEthernet1/1
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
 interface GigabitEthernet1/2
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
 interface GigabitEthernet1/3
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
 interface GigabitEthernet2/0
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
@@ -123,7 +138,7 @@ interface GigabitEthernet2/2
  switchport mode access
  media-type rj45
  negotiation auto
-!
+!         
 interface GigabitEthernet2/3
  switchport access vlan 30
  switchport mode access
@@ -131,21 +146,33 @@ interface GigabitEthernet2/3
  negotiation auto
 !
 interface GigabitEthernet3/0
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
 interface GigabitEthernet3/1
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
 interface GigabitEthernet3/2
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
 interface GigabitEthernet3/3
+ switchport access vlan 999
+ switchport mode access
  media-type rj45
  negotiation auto
 !
+interface Vlan99
+ ip address 10.10.10.85 255.255.255.240
+!
+ip default-gateway 10.10.10.81
 ip forward-protocol nd
 !
 no ip http server
@@ -157,7 +184,7 @@ no ip http secure-server
 !
 !
 control-plane
-!
+!         
 banner exec ^C
 **************************************************************************
 * IOSv is strictly limited to use for evaluation, demonstration and IOS  *
@@ -185,11 +212,23 @@ banner login ^C
 * purposes is expressly prohibited except as otherwise authorized by     *
 * Cisco in writing.                                                      *
 **************************************************************************^C
+banner motd ^CUnauthorized access is strictly forbidden!!!^C
 !
 line con 0
+ password 7 0822455D0A16
+ logging synchronous
+ login local
 line aux 0
 line vty 0 4
- login
+ password 7 01100A054818
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ password 7 01100A054818
+ logging synchronous
+ login local
+ transport input ssh
 !
-!
+!         
 end
