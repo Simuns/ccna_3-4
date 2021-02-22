@@ -1,0 +1,24 @@
+#! /bin/bash
+# Dette er en fil til at opsætte firewall midlertidigt
+# Vis kommandoer efterhånden som de køres
+set -x
+# reload til permanent opsætning:
+systemctl restart firewalld
+# -----------------------------------------------------
+##Set all firewall zones
+firewall-cmd --zone=external --change-interface=ens33
+firewall-cmd --zone=internal --change-interface=ens37
+firewall-cmd --zone=dmz --change-interface=ens38
+#(internal -> dmz) allow traffic all
+firewall-cmd --direct --add-rule ipv4 filter FORWARD 0 -i ens37 -o ens38 -j ACCEPT
+firewall-cmd --direct --add-rule ipv4 filter FORWARD 0 -i ens38 -o ens37 -m state --state RELATED,ESTABLISHED -j ACCEPT
+#allow dns, (dns, http/s, ftp services on DMZ
+firewall-cmd --zone=dmz --add-service=mdns
+firewall-cmd --zone=dmz --add-service=http
+firewall-cmd --zone=dmz --add-service=https
+firewall-cmd --zone=dmz --add-service=ftp
+#port forward to webserver (webserver http/s, ftp)
+firewall-cmd --zone=external --add-forward-port=port=80:proto=tcp:toaddr=192.168.1.3
+firewall-cmd --zone=external --add-forward-port=port=443:proto=tcp:toaddr=192.168.1.3
+firewall-cmd --zone=external --add-forward-port=port=20:proto=tcp:toaddr=192.168.1.3
+firewall-cmd --zone=external --add-forward-port=port=21:proto=tcp:toaddr=192.168.1.3

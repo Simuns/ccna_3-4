@@ -1,0 +1,17 @@
+$TTL 1D
+@	IN SOA	dns root (
+					0	; serial
+					3H	; refresh
+					15M	; retry
+					2W	; expire
+					12H )	; minimum
+		NS	dns
+dns	IN	A	192.168.1.2
+www	IN	A	192.168.1.3
+web	IN	A	192.168.1.3
+dhcp	IN	A	192.168.2.2
+dg	IN	A	192.168.2.1
+dgz	IN	A	192.168.1.1
+ftp	IN	A	192.168.1.3
+@	IN	A	192.168.1.3
+
