@@ -1,0 +1,12 @@
+$TTL 1D
+@	IN	SOA	dns.linuxgruppe4.local.	root.linuxgruppe4.local. (
+					0	; serial
+					3H	; refresh
+					15	; retry
+					2W	; expire
+					12H )	; minimum
+	IN	NS	dns.linuxgruppe4.local.
+2	IN	PTR	dns.linuxgruppe4.local.
+3	IN	PTR	www.linuxgruppe4.local.
+1	IN	PTR	dgz.linuxgruppe4.local.
+4	IN	PTR	sql.linuxgruppe4.local.

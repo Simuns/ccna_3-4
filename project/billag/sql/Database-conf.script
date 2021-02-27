@@ -1,0 +1,23 @@
+Create database TEC
+--Primarykey
+create table Postnumre(
+Postnr int(4),
+Byen varchar(20),
+constraint PK_Post_nr primary key (Postnr)
+);
+
+-- Foreign Key
+create table Medlemmer(
+Postnummer int(4),
+Adresse varchar(20),
+Navn varchar(20),
+constraint FK_Postnummer_Postnr foreign key (Postnummer) references Postnumre(Postnr)
+on delete cascade
+);
+
+
+Select * FROM Medlemmer 
+INNER JOIN
+Postnumre ON Postnummer = Postnr;
+
+Select * FROM Medlemmer INNER JOIN Postnumre ON Postnummer = Postnr;
